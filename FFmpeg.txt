@@ -1,0 +1,20 @@
+-------------------------------------------------ffmpeg½ÇÇà---------------------------------------------------
+
+
+sudo git clone git://git.videolan.org/x264
+
+//YOU SHOULD GET THE YOUTUBE STREAM KEY AT "https://www.youtube.com/live_dashboard?ar=1&o=U", after signing in YOUTUBE.
+
+
+
+//Normal cpu power single board computer, (240p)
+ ffmpeg -r 25 -s 320x240 -f video4linux2 -i /dev/video0 rtmp://a.rtmp.youtube.com/live2/YOUTUBESTREAMINGKEY
+
+//When broadcast(1080p)
+ffmpeg -f v4l2 -s 1920x1080 -r 30 -input_format h264 -i /dev/video0 -vcodec copy -r 15 -g 30 -b:v 3000k -threads 6 -bufsize 512k -f flv rtmp://a.rtmp.youtube.com/live2/YOUTUBESTREAMINGKEY
+
+//For extremly low speed single board coumputer, such as ARTIK530(QCIF Resolution)
+ffmpeg -y -ar 44100 -acodec pcm_s16le -f s16le -ac 2 -channel_layout 2.1 -i /dev/zero -f v4l2 -framerate 15 -s 176x144 -i /dev/video0 -b:a 128k -vcodec libx264 -b:v 512k -maxrate 256k -bufsize 192k -strict experimental -f flv rtmp://a.rtmp.youtube.com/live2/YOUTUBESTREAMINGKEY
+
+
+//
